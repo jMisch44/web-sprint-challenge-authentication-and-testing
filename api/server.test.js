@@ -57,13 +57,17 @@ describe('[POST] api/auth/login', () => {
 })
 
 describe('[GET] /api/jokes', () => {
-  it('responds with "token required" if no token', () => {
-
+  it('responds with "token required" if no token', async () => {
+    const res = await request(server).get('/api/jokes')
+    expect(res.body.message).toMatch(/token required/i)
   })
-  it('responds with "token invalid" if invalid or expired token', () => {
-
+  it('responds with "token invalid" if invalid or expired token', async () => {
+    const res = await request(server).get('/api/jokes').set('Authorization', 'notAToken')
+    expect(res.body.message).toMatch(/token invalid/i)
   })
-  it('responds with jokes data if correct token', () => {
-    
+  it('responds with jokes data if correct token', async () => {
+    let res = await request(server).post("/api/auth/login").send({ "username": "Captain Marvel", "password": "foobar" })
+    res = await request(server).get('/api/jokes').set('Authorization', res.body.token)
+    expect(res.body).toHaveLength(3)
   })
 })
