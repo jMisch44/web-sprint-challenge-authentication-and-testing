@@ -17,41 +17,41 @@ test('sanity', () => {
 
 describe('[POST] api/auth/register', () => {
   it('adds a user to the database', async() => {
-    await request(server).post("/api/auth/register").send({ "username": "Captain Marvel", "password": "foobar" })
+    await request(server).post('/api/auth/register').send({ 'username': 'Captain Marvel', 'password': 'foobar' })
     const users = await db('users')
     expect(users).toHaveLength(1)
   })
   it('responds with "username and password required" if missing credentials', async () => {
-    const res = await request(server).post("/api/auth/register").send({ "username": "Captain Marvel" })
+    const res = await request(server).post('/api/auth/register').send({ 'username': 'Captain Marvel' })
     expect(res.body.message).toMatch(/username and password required/i)
   })
   it('responds with "username taken" if username is taken', async () => {
-    await request(server).post("/api/auth/register").send({ "username": "Captain Marvel", "password": "foobar" })
-    const res2 = await request(server).post("/api/auth/register").send({ "username": "Captain Marvel", "password": "1234" })
+    await request(server).post('/api/auth/register').send({ 'username': 'Captain Marvel', 'password': 'foobar' })
+    const res2 = await request(server).post('/api/auth/register').send({ 'username': 'Captain Marvel', 'password': '1234' })
     expect(res2.body.message).toMatch(/username taken/i)
   })
 })
 
 describe('[POST] api/auth/login', () => {
   it('responds with "username and password required" if missing either field', async () => {
-    const res = await request(server).post("/api/auth/login").send({ "username": "Captain Marvel" })
+    const res = await request(server).post('/api/auth/login').send({ 'username': 'Captain Marvel' })
     expect(res.body.message).toMatch(/username and password required/i)
   })
   it('responds with welcome and a token on success', async () => {
-    const res = await request(server).post("/api/auth/login").send({ "username": "Captain Marvel", "password": "foobar" })
+    const res = await request(server).post('/api/auth/login').send({ 'username': 'Captain Marvel', 'password': 'foobar' })
     expect(res.body.message).toMatch(/welcome, Captain Marvel/i)
     expect(res.body.token).toBeTruthy()
   })
   it('responds with "username and password required" if missing credentials', async () => {
-    const res = await request(server).post("/api/auth/login").send({ "username": "Captain Marvel" })
+    const res = await request(server).post('/api/auth/login').send({ 'username': 'Captain Marvel' })
     expect(res.body.message).toMatch(/username and password required/i)
   })
   it('responds with "invalid credentials" when username does not exist in database', async () => {
-    const res = await request(server).post("/api/auth/login").send({ "username": "Iron Man", "password": "JARVIS" })
+    const res = await request(server).post('/api/auth/login').send({ 'username': 'Iron Man', 'password': 'JARVIS' })
     expect(res.body.message).toMatch(/invalid credentials/i)
   })
   it('responds with "invalid credentials" when password is incorrect', async () => {
-    const res = await request(server).post("/api/auth/login").send({ "username": "Captain Marvel", "password": "09876" })
+    const res = await request(server).post('/api/auth/login').send({ 'username': 'Captain Marvel', 'password': '09876' })
     expect(res.body.message).toMatch(/invalid credentials/i)
   })
 })
@@ -66,7 +66,7 @@ describe('[GET] /api/jokes', () => {
     expect(res.body.message).toMatch(/token invalid/i)
   })
   it('responds with jokes data if correct token', async () => {
-    let res = await request(server).post("/api/auth/login").send({ "username": "Captain Marvel", "password": "foobar" })
+    let res = await request(server).post('/api/auth/login').send({ 'username': 'Captain Marvel', 'password': 'foobar' })
     res = await request(server).get('/api/jokes').set('Authorization', res.body.token)
     expect(res.body).toHaveLength(3)
   })

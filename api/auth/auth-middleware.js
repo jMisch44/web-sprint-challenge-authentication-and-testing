@@ -1,12 +1,12 @@
-const db = require('../../data/dbConfig')
+const db = require('../../data/dbConfig');
 
 async function uniqueUsername(req, res, next) {
     try {
-        const maybeUser = await db('users').where("username", req.body.username)
+        const maybeUser = await db('users').where('username', req.body.username)
         if(maybeUser.length < 1) {
             next()
         } else {
-            next({ message: "username taken" })
+            next({ message: 'username taken' })
         }
     } catch (err) {
         next(err)
@@ -14,13 +14,15 @@ async function uniqueUsername(req, res, next) {
 }
 
 function missingCredentials(req, res, next) {
-    if(!req.body.username || 
-        typeof req.body.username !== "string" ||
-        req.body.username.trim() === "" || 
+    if(
+        !req.body.username || 
+        typeof req.body.username !== 'string' ||
+        req.body.username.trim() === '' || 
         !req.body.password ||
-        typeof req.body.password !== "string" || 
-        req.body.password.trim() === "") {
-        next({ message: "username and password required" })
+        typeof req.body.password !== 'string' || 
+        req.body.password.trim() === ''
+        ) {
+        next({ message: 'username and password required' })
     } else {
         next()
     }
@@ -28,12 +30,12 @@ function missingCredentials(req, res, next) {
 
 async function checkCredentials(req, res, next) {
     try{
-        const maybeUser = await db('users').where("username", req.body.username)
+        const maybeUser = await db('users').where('username', req.body.username)
         if(maybeUser.length > 0) {
             req.user = maybeUser[0]
             next()
         } else {
-            next({ message: "invalid credentials"})
+            next({ message: 'invalid credentials'})
         }
     } catch (err) {
         next(err)
