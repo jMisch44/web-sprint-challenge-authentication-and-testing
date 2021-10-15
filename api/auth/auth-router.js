@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const db = require('../../data/dbConfig')
-const { missingCredentials, uniqueUsername } = require('./auth-middleware')
+const { missingCredentials, uniqueUsername, checkCredentials } = require('./auth-middleware')
 const router = require('express').Router();
 
 router.post('/register', missingCredentials, uniqueUsername, async (req, res, next) => {
@@ -43,7 +43,7 @@ router.post('/register', missingCredentials, uniqueUsername, async (req, res, ne
   */
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', missingCredentials, checkCredentials, (req, res) => {
   res.end('implement login, please!');
   /*
     IMPLEMENT
