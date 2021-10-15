@@ -1,5 +1,12 @@
-function uniqueUsername(req, res, next) {
+const db = require('../../data/dbConfig')
 
+async function uniqueUsername(req, res, next) {
+    const maybeUser = await db('users').where("username", req.body.username)
+    if(maybeUser.length < 1) {
+        next()
+    } else {
+        next({ message: "username taken" })
+    }
 }
 
 function missingCredentials(req, res, next) {
