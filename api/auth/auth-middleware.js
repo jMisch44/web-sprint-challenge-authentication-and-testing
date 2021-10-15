@@ -30,7 +30,7 @@ async function checkCredentials(req, res, next) {
     try{
         const maybeUser = await db('users').where("username", req.body.username)
         if(maybeUser.length > 0) {
-            req.user = maybeUser
+            req.user = maybeUser[0]
             next()
         } else {
             next({ message: "invalid credentials"})

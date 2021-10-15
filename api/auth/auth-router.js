@@ -46,7 +46,7 @@ router.post('/register', missingCredentials, uniqueUsername, async (req, res, ne
 });
 
 router.post('/login', missingCredentials, checkCredentials, (req, res, next) => {
-  let { username, password } = req.body;
+  let { password } = req.body;
 
   if(req.user && bcrypt.compareSync(password, req.user.password)) {
     const token = buildToken(req.user);
