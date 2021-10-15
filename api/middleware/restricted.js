@@ -1,5 +1,20 @@
+const JWT_SECRET = require('../auth/auth-middleware');
+const jwt = require('jsonwebtoken');
+
 module.exports = (req, res, next) => {
-  next();
+  const token = req.headers.authorization
+
+  if(!token) {
+    return next({ message: "token required" })
+  }
+  
+  jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
+    if(err) {
+      return next({ message: "token invalid" })
+    }
+    req.decodedToken = decodedToken
+    return next()
+  })
   /*
     IMPLEMENT
 
